@@ -54,7 +54,12 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      env: {},
+      env: {
+        CLIENT_ID: process.env.CLIENT_ID,
+        CLIENT_SECRET: process.env.CLIENT_SECRET,
+        USERNAME: process.env.USERNAME,
+        PASSWORD: process.env.PASSWORD,
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
