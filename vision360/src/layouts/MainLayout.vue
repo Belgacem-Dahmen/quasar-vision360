@@ -89,6 +89,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import NavLinks, { NavLink } from 'src/components/NavLinks.vue';
+import { useTokenStore } from 'src/stores/TokenStore';
 
 defineOptions({
   name: 'MainLayout',
@@ -139,10 +140,11 @@ const leftDrawerOpen = ref(false);
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
-
-function onMainClick() {
+const tokenStore = useTokenStore();
+const onMainClick = async () => {
   console.log('Clicked on main button');
-}
+  await tokenStore.generateToken();
+};
 
 function onItemClick() {
   console.log('Clicked on an Item');
