@@ -61,12 +61,7 @@ module.exports = configure(function (/* ctx */) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        API_BASE_URL:'https://api.pmp.infopro-digital-automotive.com/api/v1/',
-        ACCES_TOKEN_URL :'https://api.pmp.infopro-digital-automotive.com/api/v1/service-authentification/token',
-        CLIENT_ID:'2',
-        CLIENT_SECRET :'vwfAH0CLizhxuQz2ACqJCAJV0EBKM9X6WNvlVvoe',
-        USERNAME:'api_externe@infopro-digital-automotive.com',
-        PASSWORD:'Test123*'
+       
        },
       // rawDefine: {}
       // ignorePublicFolder: true,
