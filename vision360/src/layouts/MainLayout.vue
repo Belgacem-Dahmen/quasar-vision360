@@ -15,7 +15,49 @@
           <img src="src/assets/logo-ipda.png" alt="" width="200px" />
         </q-toolbar-title>
 
-        <div class="text-red">
+        <div class="row text-red q-gutter-md">
+          <q-btn-dropdown
+            split
+            color="primary"
+            push
+            glossy
+            no-caps
+            icon="fa-solid fa-key"
+            label="Manage Token"
+            size="12px"
+            @click="onMainClick"
+          >
+            <q-list>
+              <q-item clickable v-close-popup @click="onItemClick">
+                <q-item-section avatar>
+                  <q-avatar
+                    icon="fa-solid fa-plus-circle"
+                    color="primary"
+                    text-color="white"
+                    size="md"
+                  />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Generate new </q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-item clickable v-close-popup @click="onItemClick">
+                <q-item-section avatar>
+                  <q-avatar
+                    icon="fa-solid fa-trash"
+                    color="secondary"
+                    text-color="white"
+                    size="md"
+                  />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Delete Token</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+
           <q-input
             v-model="immat"
             dense
@@ -63,38 +105,32 @@ const linksList: NavLink[] = [
     title: 'Client Data Linked to a Vehicle',
     caption: 'Client Data Linked to a Vehicle',
     icon: 'fa-solid fa-car',
-    link: '/client-vehicle-data',
+    link: '/client-data',
   },
 
   {
     title: 'Vehicle Operation History',
     caption: 'Vehicle Operation History',
     icon: 'fa-solid fa-wrench',
-    link: '/vehicle-operation-history',
+    link: '/history',
   },
   {
     title: 'Maintenance Plans',
     caption: 'Maintenance Plans',
     icon: 'fa-solid fa-calendar-alt',
-    link: '/maintenance-plans',
+    link: '/plans',
   },
   {
     title: 'List of Qualified Invoices',
     caption: 'List of Qualified Invoices',
     icon: 'fa-solid fa-file-invoice-dollar',
-    link: '/qualified-invoices',
+    link: '/invoices',
   },
   {
     title: 'Follow-Up History',
     caption: 'Follow-Up History',
     icon: 'fa-solid fa-history',
-    link: '/follow-up-history',
-  },
-  {
-    title: 'All Previously Mentioned Data',
-    caption: 'All Previously Mentioned Data',
-    icon: 'fa-solid fa-database',
-    link: '/all-data',
+    link: '/history',
   },
 ];
 
@@ -102,5 +138,13 @@ const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+
+function onMainClick() {
+  console.log('Clicked on main button');
+}
+
+function onItemClick() {
+  console.log('Clicked on an Item');
 }
 </script>

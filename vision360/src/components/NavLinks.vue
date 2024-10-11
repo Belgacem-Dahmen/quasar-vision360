@@ -1,7 +1,7 @@
 <template>
-  <q-item clickable tag="a" target="_blank" :href="link">
+  <q-item clickable tag="a" :to="link">
     <q-item-section v-if="icon" avatar>
-      <q-icon :name="icon" />
+      <q-icon :name="icon" color="primary " class="q-ml-md" />
     </q-item-section>
 
     <q-item-section>
