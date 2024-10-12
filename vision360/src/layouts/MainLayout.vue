@@ -42,7 +42,7 @@
                 </q-item-section>
               </q-item>
 
-              <q-item clickable v-close-popup @click="onItemClick">
+              <q-item clickable v-close-popup @click="onDelete">
                 <q-item-section avatar>
                   <q-avatar
                     icon="fa-solid fa-trash"
@@ -141,12 +141,14 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 const tokenStore = useTokenStore();
-const onMainClick = async () => {
-  console.log('Clicked on main button');
+const onMainClick = async () => {};
+
+const onItemClick = async () => {
   await tokenStore.generateToken();
+  console.log('Clicked on an Item');
 };
 
-function onItemClick() {
-  console.log('Clicked on an Item');
-}
+const onDelete = () => {
+  tokenStore.deleteToken();
+};
 </script>

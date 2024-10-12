@@ -55,10 +55,11 @@ module.exports = configure(function (/* ctx */) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        CLIENT_ID: process.env.CLIENT_ID,
-        CLIENT_SECRET: process.env.CLIENT_SECRET,
-        USERNAME: process.env.USERNAME,
-        PASSWORD: process.env.PASSWORD,
+        API_BASE_URL: process.env.API_BASE_URL,
+        CLIENT_ID: process.env.API_CLIENT_ID,
+        CLIENT_SECRET: process.env.API_CLIENT_SECRET,
+        USERNAME: process.env.API_USERNAME,
+        PASSWORD: process.env.API_PASSWORD,
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
@@ -106,7 +107,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ['Notify'],
     },
 
     // animations: 'all', // --- includes all animations

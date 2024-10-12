@@ -1,25 +1,57 @@
 import { defineStore } from 'pinia';
 import { api } from 'src/boot/axios';
+import { AxiosResponse } from 'axios';
+
 import { ref } from 'vue';
+import { errorNotification, successNotification } from 'src/use/useNotify';
 
 export const useTokenStore = defineStore('token', () => {
-  const token = ref('');
+  const token = ref({
+    
+  });
 
-  const generateToken = async () => {
+  interface TokenResponse {
+    token_type: string;
+    expires_in: number;
+    access_token: string;
+    refresh_token: string;
+  }
+
+  const generateToken = async (): Promise<string | null> => {
     try {
-      const response = await api('/service-authentification/token', {
-        method: 'POST',
-        client_id: process.env.CLIENT_ID,
-        client_secret: process.env.CLIENT_SECRET,
-        username: process.env.USERNAME,
-        password: process.env.PASSWORD,
-      });
-      token.value = response.data.token;
-      console.log(token.value); // Assuming the API returns a `token` field
+      const response: AxiosResponse<TokenResponse> = await api.post(
+        '/service-authentification/token',
+        {
+          grant_type: 'password',
+          client_id: process.env.API_CLIENT_ID,
+          client_secret: process.env.API_CLIENT_SECRET,
+          username: process.env.API_USERNAME,
+          password: process.env.API_PASSWORD,
+        }
+      );
+
+      const tokenData = response.data;
+      console.log('Access Token:', tokenData.access_token);
+      return tokenData.access_token; // Return the access token
     } catch (error) {
-      console.error('Failed to generate token:', error);
+      console.error('Error fetching the token:', error);
+      errorNotification('Error fetching the token');
+      return null;
     }
   };
 
-  return { token, generateToken };
+  const deleteToken = () => {
+    token.value = '';
+    successNotification('token deleted successfully');
+  };
+
+  const verifyToken = (token: string, expirationDate: string): boolean => {
+    const expiration = new Date(expirationDate).getTime() / 1000;
+
+    const now = Date.now() / 1000;
+
+    return now < expiration;
+  };
+
+  return { token, generateToken, deleteToken, verifyToken };
 });
