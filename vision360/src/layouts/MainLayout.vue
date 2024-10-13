@@ -12,84 +12,92 @@
         />
 
         <q-toolbar-title class="row bg-grey-2 items-center">
-          <img src="src/assets/logo-ipda.png" alt="" width="200px" />
+          <router-link to="/">
+            <img src="src/assets/logo-ipda.png" alt="" width="200px" />
+          </router-link>
         </q-toolbar-title>
-
-        <div class="row text-red q-gutter-md">
-          <q-btn-dropdown
-            split
-            color="primary"
-            push
-            glossy
-            no-caps
-            icon="fa-solid fa-key"
-            label="Manage Token"
-            size="12px"
-            @click="onMainClick"
-          >
-            <q-list>
-              <q-item clickable v-close-popup @click="onItemClick">
-                <q-item-section avatar>
-                  <q-avatar
-                    icon="fa-solid fa-plus-circle"
-                    color="primary"
-                    text-color="white"
-                    size="md"
-                  />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Generate new </q-item-label>
-                </q-item-section>
-              </q-item>
-
-              <q-item clickable v-close-popup @click="onDelete">
-                <q-item-section avatar>
-                  <q-avatar
-                    icon="fa-solid fa-trash"
-                    color="secondary"
-                    text-color="white"
-                    size="md"
-                  />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Delete Token</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
-
-          <q-input
-            v-model="immat"
-            dense
-            placeholder="Immatriculation"
-            color="blue-8"
-          >
-            <template v-slot:prepend>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <q-list>
         <q-item-label header class="q-pa-lg"> VISION 360</q-item-label>
-
         <NavLinks v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
     <q-page-container>
+      <div
+        class="row text-red q-gutter-md q-pa-lg align-center justify-between bg-white"
+      >
+        <ReseauSelection />
+
+        <q-input
+          v-model="immat"
+          dense
+          placeholder="Immatriculation"
+          color="blue-8"
+        >
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+
+        <q-btn-dropdown
+          color="primary"
+          push
+          glossy
+          icon="fa-solid fa-key"
+          label="Manage Token"
+          size="11px"
+          @click="onMainClick"
+        >
+          <q-list>
+            <q-item
+              clickable
+              v-close-popup
+              @click="onItemClick"
+              :disable="generateNewToken"
+            >
+              <q-item-section avatar>
+                <q-avatar
+                  icon="fa-solid fa-plus-circle"
+                  color="primary"
+                  text-color="white"
+                  size="md"
+                />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Generate new </q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-close-popup @click="onDelete">
+              <q-item-section avatar>
+                <q-avatar
+                  icon="fa-solid fa-trash"
+                  color="secondary"
+                  text-color="white"
+                  size="md"
+                />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Delete Token</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+      </div>
       <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import NavLinks, { NavLink } from 'src/components/NavLinks.vue';
 import { useTokenStore } from 'src/stores/TokenStore';
+import ReseauSelection from 'src/components/Ui/ReseauSelection.vue';
 
 defineOptions({
   name: 'MainLayout',
@@ -134,21 +142,25 @@ const linksList: NavLink[] = [
     link: '/history',
   },
 ];
+const tokenStore = useTokenStore();
+const generateNewToken = computed((): boolean => {
+  return tokenStore.token.access_token !== '' ? true : false;
+});
 
 const leftDrawerOpen = ref(false);
 
-function toggleLeftDrawer() {
+const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
-}
-const tokenStore = useTokenStore();
+};
 const onMainClick = async () => {};
 
 const onItemClick = async () => {
   await tokenStore.generateToken();
-  console.log('Clicked on an Item');
 };
 
 const onDelete = () => {
   tokenStore.deleteToken();
 };
+
+// selection
 </script>
