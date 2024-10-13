@@ -1,6 +1,6 @@
 import { Notify } from 'quasar';
 
-export const successNotification = (message) => {
+export const successNotification = (message: string) => {
   Notify.create({
     message,
     color: 'positive',
@@ -10,7 +10,7 @@ export const successNotification = (message) => {
   });
 };
 
-export const errorNotification = (message) => {
+export const errorNotification = (message: string) => {
   Notify.create({
     message,
     color: 'negative',

@@ -2,13 +2,21 @@ import { defineStore } from 'pinia';
 import { api } from 'src/boot/axios';
 import { AxiosResponse } from 'axios';
 
-import { ref } from 'vue';
+import {  ref } from 'vue';
 import { errorNotification, successNotification } from 'src/use/useNotify';
+import { Token } from 'src/config/Enums/token.type';
 
 export const useTokenStore = defineStore('token', () => {
-  const token = ref({
-    
+  // initial state
+  const token = ref<Token>({
+    token_type: '',
+    expires_in: 0,
+    access_token: '',
+    received_at: 0,
+    refresh_token: '',
   });
+  const isValid = ref(false)
+
 
   interface TokenResponse {
     token_type: string;
@@ -17,10 +25,10 @@ export const useTokenStore = defineStore('token', () => {
     refresh_token: string;
   }
 
-  const generateToken = async (): Promise<string | null> => {
+  const generateToken = async (): Promise<Token | null> => {
     try {
       const response: AxiosResponse<TokenResponse> = await api.post(
-        '/service-authentification/token',
+        process.env.API_ACCES_TOKEN_URL,
         {
           grant_type: 'password',
           client_id: process.env.API_CLIENT_ID,
@@ -31,27 +39,39 @@ export const useTokenStore = defineStore('token', () => {
       );
 
       const tokenData = response.data;
-      console.log('Access Token:', tokenData.access_token);
-      return tokenData.access_token; // Return the access token
+      token.value = { ...tokenData, received_at: Date.now() };
+      localStorage.setItem('token', JSON.stringify(token.value));
+      
+
+      successNotification('Token generated successfully');
+
+      return token.value;
     } catch (error) {
-      console.error('Error fetching the token:', error);
       errorNotification('Error fetching the token');
       return null;
     }
   };
-
   const deleteToken = () => {
-    token.value = '';
+    token.value = {
+      token_type: '',
+      expires_in: 0,
+      received_at: 0,
+      access_token: '',
+      refresh_token: '',
+    };
     successNotification('token deleted successfully');
   };
 
-  const verifyToken = (token: string, expirationDate: string): boolean => {
-    const expiration = new Date(expirationDate).getTime() / 1000;
+  const verifyToken = (token: Token): boolean => {
+    // Calculer l'heure d'expiration en ajoutant expires_in (en secondes) au timestamp de réception (converti en secondes)
+    const expiration = token.received_at / 1000 + token.expires_in;
 
+    // Heure actuelle en secondes
     const now = Date.now() / 1000;
 
-    return now < expiration;
+    // Comparer maintenant à la date d'expiration
+    return (isValid.value = now < expiration);
   };
 
-  return { token, generateToken, deleteToken, verifyToken };
+  return { token, isValid, generateToken, deleteToken, verifyToken };
 });
