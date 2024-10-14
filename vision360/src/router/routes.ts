@@ -1,30 +1,39 @@
+
+
 import { RouteRecordRaw } from 'vue-router';
+
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    meta:{requireAuth :true},
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') },
+      { path: '', component: () => import('pages/IndexPage.vue'),meta:{requireAuth :true}, },
       {
         path: 'predictions',
         component: () => import('src/pages/dataPages/PredictionsPage.vue'),
+        meta:{requireAuth :true},
       },
       {
         path: 'history',
         component: () => import('src/pages/dataPages/HistoryPage.vue'),
+        meta:{requireAuth :true},
       },
       {
         path: 'plans',
         component: () => import('src/pages/dataPages/PlansPage.vue'),
+        meta:{requireAuth :true},
       },
       {
         path: 'invoices',
         component: () => import('src/pages/dataPages/InvoicesPage.vue'),
+        meta:{requireAuth :true},
       },
       {
         path: 'client-data',
         component: () => import('src/pages/dataPages/ClientDataPage.vue'),
+        meta:{requireAuth :true},
       },
     ],
   },
@@ -50,5 +59,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/ErrorNotFound.vue'),
   },
 ];
+
 
 export default routes;
