@@ -55,19 +55,19 @@ module.exports = configure(function (/* ctx */) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        VUE_ROUTER_MODE: process.config.VUE_ROUTER_MODE,
+        VUE_ROUTER_MODE: process.env.VUE_ROUTER_MODE,
         API_ACCES_TOKEN_URL: process.env.API_ACCES_TOKEN_URL,
         API_CLIENT_ID: process.env.API_CLIENT_ID,
         API_CLIENT_SECRET: process.env.API_CLIENT_SECRET,
         API_PASSWORD: process.env.API_PASSWORD,
         API_USERNAME: process.env.API_USERNAME,
-        FIREBASE_API_KEY: process.config.FIREBASE_API_KEY,
-        FIREBASE_AUTH_DOMAIN: process.config.FIREBASE_AUTH_DOMAIN,
-        FIREBASE_PROJECT_ID: process.config.FIREBASE_PROJECT_ID,
-        FIREBASE_STORAGE_BUCKET: process.config.FIREBASE_STORAGE_BUCKET,
+        FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+        FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+        FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+        FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
         FIREBASE_MESSAGING_SENDER_ID:
-          process.config.FIREBASE_MESSAGING_SENDER_ID,
-        FIREBASE_APP_ID: process.config.FIREBASE_APP_ID,
+          process.env.FIREBASE_MESSAGING_SENDER_ID,
+        FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
@@ -96,6 +96,13 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
+      proxy:{
+       '/api' : {
+        target: process.env.API_BASE_URL,
+        changeOrigin: true,  
+        rewrite: (path) => path.replace(/^\/api/, '')
+       }
+      },
       // https: true
       open: true, // opens browser window automatically
     },
@@ -115,7 +122,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify'],
+      plugins: ['Notify','LocalStorage',],
     },
 
     // animations: 'all', // --- includes all animations

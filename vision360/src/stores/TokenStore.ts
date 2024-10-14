@@ -2,9 +2,10 @@ import { defineStore } from 'pinia';
 import { api } from 'src/boot/axios';
 import { AxiosResponse } from 'axios';
 
-import {  ref } from 'vue';
+import { ref } from 'vue';
 import { errorNotification, successNotification } from 'src/use/useNotify';
 import { Token } from 'src/config/Enums/token.type';
+import { saveToLocalStorage } from 'src/use/useLocalStorage';
 
 export const useTokenStore = defineStore('token', () => {
   // initial state
@@ -15,8 +16,7 @@ export const useTokenStore = defineStore('token', () => {
     received_at: 0,
     refresh_token: '',
   });
-  const isValid = ref(false)
-
+  const isValid = ref(false);
 
   interface TokenResponse {
     token_type: string;
@@ -40,11 +40,8 @@ export const useTokenStore = defineStore('token', () => {
 
       const tokenData = response.data;
       token.value = { ...tokenData, received_at: Date.now() };
-      localStorage.setItem('token', JSON.stringify(token.value));
-      
-
+      saveToLocalStorage('token', token.value.access_token);
       successNotification('Token generated successfully');
-
       return token.value;
     } catch (error) {
       errorNotification('Error fetching the token');
@@ -63,13 +60,8 @@ export const useTokenStore = defineStore('token', () => {
   };
 
   const verifyToken = (token: Token): boolean => {
-    // Calculer l'heure d'expiration en ajoutant expires_in (en secondes) au timestamp de réception (converti en secondes)
     const expiration = token.received_at / 1000 + token.expires_in;
-
-    // Heure actuelle en secondes
     const now = Date.now() / 1000;
-
-    // Comparer maintenant à la date d'expiration
     return (isValid.value = now < expiration);
   };
 
