@@ -4,7 +4,7 @@ import { loginUser, logoutUser, registerUser } from 'src/use/useFirebase';
 import { ref } from 'vue';
 
 export const useAuthStore = defineStore('auth', () => {
-  const currentUser = ref();
+  const currentUser = ref()
 
   const register = async (email: string, password: string) => {
     await registerUser(email, password);

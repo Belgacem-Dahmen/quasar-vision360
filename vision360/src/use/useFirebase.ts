@@ -51,15 +51,15 @@ const loginUser = async (email: string, password: string) => {
     );
 
     // Mise à jour de user.value
-    user.value = loggedInUser;
+    successNotification('User logged in successfully');
+    return loggedInUser;
 
     // Notification de succès
-    successNotification('User logged in successfully');
   } catch (error) {
     console.error('Error logging in:', error);
     // Notification d'erreur
     errorNotification('Error logging in');
-// Propagation de l'erreur si nécessaire
+    // Propagation de l'erreur si nécessaire
     throw error;
   }
 };
@@ -76,4 +76,4 @@ const logoutUser = async () => {
 };
 
 // Export des fonctions et de l'utilisateur
-export { registerUser, loginUser,logoutUser, user };
+export { registerUser, loginUser, logoutUser, user };
