@@ -9,7 +9,8 @@ export const useDataStore = defineStore('data', () => {
   const reseau = ref<ReseauEnum>(ReseauEnum.Ateliofid);
   const data = ref({
     full: {},
-    predictions:{},
+    predictions: {},
+    history: {},
   });
 
   type Predictions = object;
@@ -42,5 +43,18 @@ export const useDataStore = defineStore('data', () => {
       console.log(err);
     }
   };
-  return { immat, reseau, getPredictions, getFullData };
+
+  const getHistory = async () => {
+    try {
+      const url = `api/${reseau.value}/service-external-client/${immat.value}/history?lang=en`;
+      const response = await api.post(url, {
+        immatriculation: immat.value,
+      });
+      data.value.history = response.data;
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  return { immat, reseau, getPredictions, getFullData,getHistory };
 });

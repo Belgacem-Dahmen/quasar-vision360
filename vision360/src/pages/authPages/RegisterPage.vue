@@ -37,6 +37,7 @@
           label="Sign in"
           no-caps
           class="full-width"
+          @click="handleClick"
         ></q-btn>
       </q-card-section>
       <q-card-section class="text-center q-pt-none">
@@ -57,9 +58,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import logo from 'src/assets/logo-ipda.png';
+import { useAuthStore } from 'src/stores/AuthStore';
+
+const authStore = useAuthStore();
+const handleClick = async () => {
+  console.log(authStore.currentUser)
+  await authStore.register(email.value, password.value);
+  console.log(authStore.currentUser)
+};
+
 const email = ref('');
-const password = ref('');
 const confirmed_email = ref('');
+const password = ref('');
 </script>
 
 <style scoped>

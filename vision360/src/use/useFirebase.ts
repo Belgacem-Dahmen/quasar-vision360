@@ -1,67 +1,79 @@
-// import {
-//   signInWithEmailAndPassword,
-//   signOut,
-//   createUserWithEmailAndPassword,
-//   onAuthStateChanged,
-//   getAuth,
-// } from 'firebase/auth';
-// import { app } from 'src/config/Enums/firebase/firebase';
-// import { ref } from 'vue';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
+import { app } from 'src/firebase/firebase';
+
+import { ref } from 'vue';
+import { errorNotification, successNotification } from './useNotify';
 
 // // Initialisation de Firebase
-// const auth = getAuth(app);
+const auth = getAuth(app);
 
 // // Référence pour stocker l'utilisateur authentifié
-// const user = ref(null);
+const user = ref({});
 
-// // Fonction pour créer un nouvel utilisateur
-// const registerUser = async (email: string, password: string) => {
-//   try {
-//     const userCredential = await createUserWithEmailAndPassword(
-//       auth,
-//       email,
-//       password
-//     );
-//     user.value = userCredential.user;
-//   } catch (error) {
-//     console.error('Error registering user:', error);
-//     throw error;
-//   }
-// };
+// Fonction pour créer un nouvel utilisateur
+const registerUser = async (email: string, password: string) => {
+  try {
+    const { user: newUser } = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-// // Fonction pour se connecter
-// const loginUser = async (email: string, password: string) => {
-//   try {
-//     const userCredential = await signInWithEmailAndPassword(
-//       auth,
-//       email,
-//       password
-//     );
-//     user.value = userCredential.user;
-//   } catch (error) {
-//     console.error('Error logging in:', error);
-//     throw error;
-//   }
-// };
+    // Met à jour user.value avec l'utilisateur nouvellement créé
+    user.value = newUser;
 
-// // Fonction pour se déconnecter
-// const logoutUser = async () => {
-//   try {
-//     await signOut(auth);
-//     user.value = null;
-//   } catch (error) {
-//     console.error('Error logging out:', error);
-//     throw error;
-//   }
-// };
+    // Notification de succès
+    successNotification('User created successfully');
+  } catch (error) {
+    // Log des erreurs pour debug
+    console.error('Error registering user:', error);
 
-// // Fonction pour observer l'état de l'authentification
-// const observeAuthState = (callback: (user: any) => void) => {
-//   onAuthStateChanged(auth, (currentUser) => {
-//     user.value = currentUser;
-//     callback(currentUser);
-//   });
-// };
+    // Notification d'erreur
+    errorNotification('Error registering user');
 
-// // Export des fonctions et de l'utilisateur
-// export { registerUser, loginUser, logoutUser, observeAuthState, user };
+    // Propagation de l'erreur si nécessaire
+    throw error;
+  }
+};
+
+//  Fonction pour se connecter
+const loginUser = async (email: string, password: string) => {
+  try {
+    const { user: loggedInUser } = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    // Mise à jour de user.value
+    user.value = loggedInUser;
+
+    // Notification de succès
+    successNotification('User logged in successfully');
+  } catch (error) {
+    console.error('Error logging in:', error);
+    // Notification d'erreur
+    errorNotification('Error logging in');
+// Propagation de l'erreur si nécessaire
+    throw error;
+  }
+};
+
+// Fonction pour se déconnecter
+const logoutUser = async () => {
+  try {
+    await signOut(auth);
+    user.value = {};
+  } catch (error) {
+    console.error('Error logging out:', error);
+    throw error;
+  }
+};
+
+// Export des fonctions et de l'utilisateur
+export { registerUser, loginUser,logoutUser, user };

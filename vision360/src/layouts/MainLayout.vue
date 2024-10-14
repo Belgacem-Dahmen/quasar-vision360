@@ -87,6 +87,8 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
+
+        <q-btn clickable @click="handleLogout"> logout </q-btn>
       </div>
       <router-view />
     </q-page-container>
@@ -98,6 +100,8 @@ import { computed, ref } from 'vue';
 import NavLinks, { NavLink } from 'src/components/NavLinks.vue';
 import { useTokenStore } from 'src/stores/TokenStore';
 import ReseauSelection from 'src/components/Ui/ReseauSelection.vue';
+import { useAuthStore } from 'src/stores/AuthStore';
+import { useRouter } from 'vue-router';
 
 defineOptions({
   name: 'MainLayout',
@@ -143,6 +147,8 @@ const linksList: NavLink[] = [
   },
 ];
 const tokenStore = useTokenStore();
+const authStore = useAuthStore();
+const router = useRouter();
 const generateNewToken = computed((): boolean => {
   return tokenStore.token.access_token !== '' ? true : false;
 });
@@ -160,6 +166,11 @@ const onItemClick = async () => {
 
 const onDelete = () => {
   tokenStore.deleteToken();
+};
+
+const handleLogout = async () => {
+  await authStore.logout();
+  router.push('/auth');
 };
 
 // selection

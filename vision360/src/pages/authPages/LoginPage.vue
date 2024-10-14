@@ -29,6 +29,7 @@
           label="Sign in"
           no-caps
           class="full-width"
+          @click="handleClick"
         ></q-btn>
       </q-card-section>
       <q-card-section class="text-center q-pt-none">
@@ -52,6 +53,15 @@ import { ref } from 'vue';
 const email = ref('');
 const password = ref('');
 import logo from 'src/assets/logo-ipda.png';
+import { useAuthStore } from 'src/stores/AuthStore';
+import { useRouter } from 'vue-router';
+const authStore = useAuthStore();
+const router = useRouter()
+
+const handleClick = async () => {
+  await authStore.login(email.value, password.value);
+  router.push('/');
+};
 </script>
 
 <style scoped>
