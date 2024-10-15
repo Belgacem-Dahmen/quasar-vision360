@@ -42,6 +42,24 @@
             >Sign up.</router-link
           >
         </div>
+        <div class="row">
+          <div class="q-pa-md q-gutter-sm">
+            <q-btn square color="grey-3" @click="handleGoogleLogin">
+              <q-icon
+                name="fa-brands fa-google"
+                size="md"
+                class="custom-google-icon"
+            /></q-btn>
+
+            <q-btn square color="secondary" @click="handleMicrosoftLogin">
+              <q-icon
+                name="fa-brands fa-microsoft"
+                size="md"
+                class="custom-microsoft-icon"
+              />
+            </q-btn>
+          </div>
+        </div>
       </q-card-section>
       <q-item> </q-item>
     </q-card>
@@ -56,11 +74,20 @@ import logo from 'src/assets/logo-ipda.png';
 import { useAuthStore } from 'src/stores/AuthStore';
 import { useRouter } from 'vue-router';
 const authStore = useAuthStore();
-const router = useRouter()
+const router = useRouter();
 
 const handleClick = async () => {
   await authStore.login(email.value, password.value);
   router.push('/');
+};
+
+const handleGoogleLogin = async () => {
+  await authStore.loginWithGoogle();
+  router.push('/');
+};
+
+const handleMicrosoftLogin = () => {
+  console.log('login with microsoft');
 };
 </script>
 
@@ -73,5 +100,46 @@ const handleClick = async () => {
   border-radius: 8px;
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
     0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.custom-google-icon {
+  background: conic-gradient(
+      from -45deg,
+      #ea4335 110deg,
+      #4285f4 90deg 180deg,
+      #34a853 180deg 270deg,
+      #fbbc05 270deg
+    )
+    73% 55%/150% 150% no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.custom-microsoft-icon {
+  background: conic-gradient(
+    from 180deg at 50% -20%,
+    #f25022,
+    #db7a00,
+    #3a3469,
+    #7fba00,
+    #7fba00,
+    #7fba00
+  );
+  background: conic-gradient(
+    from 90deg at -20% 50%,
+    #4285f4,
+    #5e82f8,
+    #c672fa,
+    #ff9492,
+    #feb72d,
+    #fbbc05
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 </style>

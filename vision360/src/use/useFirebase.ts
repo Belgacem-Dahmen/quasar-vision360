@@ -1,16 +1,17 @@
 import {
   getAuth,
   createUserWithEmailAndPassword,
+  signInWithPopup,
   signInWithEmailAndPassword,
   signOut,
+  GoogleAuthProvider,
 } from 'firebase/auth';
 import { app } from 'src/firebase/firebase';
-
 import { ref } from 'vue';
 import { errorNotification, successNotification } from './useNotify';
 
 const auth = getAuth(app);
-
+const provider = new GoogleAuthProvider();
 const user = ref({});
 
 const registerUser = async (email: string, password: string) => {
@@ -49,7 +50,13 @@ const loginUser = async (email: string, password: string) => {
     throw error;
   }
 };
-
+const loginWithGmail = async () => {
+  auth.useDeviceLanguage();
+  try {
+    const data = await signInWithPopup(auth, provider);
+    console.log(data);
+  } catch (error) {}
+};
 const logoutUser = async () => {
   try {
     await signOut(auth);
@@ -60,4 +67,4 @@ const logoutUser = async () => {
   }
 };
 
-export { registerUser, loginUser, logoutUser, user };
+export { registerUser, loginUser, logoutUser,loginWithGmail, user };
