@@ -1,4 +1,5 @@
 // authStore.ts
+import { getAuth } from 'firebase/auth';
 import { defineStore } from 'pinia';
 import {
   loginUser,
@@ -10,7 +11,7 @@ import { ref } from 'vue';
 
 export const useAuthStore = defineStore('auth', () => {
   const currentUser = ref();
-
+  const auth = ref(getAuth())
   const register = async (email: string, password: string) => {
     await registerUser(email, password);
   };
@@ -24,7 +25,7 @@ export const useAuthStore = defineStore('auth', () => {
     currentUser.value = user;
   };
   const logout = async () => {
-    await logoutUser();
+    currentUser.value = await logoutUser();
   };
 
   return {
@@ -33,5 +34,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     loginWithGoogle,
     logout,
+    auth
   };
 });

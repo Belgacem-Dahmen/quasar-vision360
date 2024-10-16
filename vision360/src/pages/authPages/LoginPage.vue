@@ -75,10 +75,18 @@ import { useAuthStore } from 'src/stores/AuthStore';
 import { useRouter } from 'vue-router';
 const authStore = useAuthStore();
 const router = useRouter();
-
+const isLoading = ref(false)
+const errorMsg = ref('')
 const handleClick = async () => {
-  await authStore.login(email.value, password.value);
-  router.push('/');
+  isLoading.value = true
+  try {
+    await authStore.login(email.value, password.value);
+    router.push('/');
+  } catch (error) {
+    errorMsg.value = 'Merci de Verifier vos données'  }
+    finally {
+      
+    }
 };
 
 const handleGoogleLogin = async () => {

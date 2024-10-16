@@ -53,18 +53,18 @@ const loginUser = async (email: string, password: string) => {
 const loginWithGmail = async () => {
   auth.useDeviceLanguage();
   try {
-    const data = await signInWithPopup(auth, provider);
-    console.log(data);
+  await signInWithPopup(auth, provider);
   } catch (error) {}
 };
 const logoutUser = async () => {
   try {
     await signOut(auth);
-    user.value = {};
+    const loggedoutUser = auth.currentUser;
+    return loggedoutUser;
   } catch (error) {
     console.error('Error logging out:', error);
     throw error;
   }
 };
 
-export { registerUser, loginUser, logoutUser,loginWithGmail, user };
+export { registerUser, loginUser, logoutUser, loginWithGmail, user };

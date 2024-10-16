@@ -9,12 +9,27 @@
           icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
+          
         />
 
-        <q-toolbar-title class="row bg-grey-2 items-center">
+        <q-toolbar-title class="row bg-grey-2 items-center justify-between">
           <router-link to="/">
             <img src="src/assets/logo-ipda.png" alt="" width="200px" />
           </router-link>
+         
+
+          <div class="row items-center justify-center q-gutter-sm">
+            <q-avatar size="50px">
+              <img src="https://cdn.quasar.dev/img/avatar4.jpg">
+            </q-avatar>
+            <div class="text-subtitle1 q-mt-md q-mb-xs">jon dhoe</div>
+            <q-btn clickable @click="handleLogout" >
+              logout
+            </q-btn>
+
+
+            
+          </div>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -87,8 +102,6 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-
-        <q-btn clickable @click="handleLogout"> logout </q-btn>
       </div>
       <router-view />
     </q-page-container>
@@ -102,6 +115,7 @@ import { useTokenStore } from 'src/stores/TokenStore';
 import ReseauSelection from 'src/components/Ui/ReseauSelection.vue';
 import { useAuthStore } from 'src/stores/AuthStore';
 import { useRouter } from 'vue-router';
+
 
 defineOptions({
   name: 'MainLayout',
@@ -148,7 +162,12 @@ const linksList: NavLink[] = [
 ];
 const tokenStore = useTokenStore();
 const authStore = useAuthStore();
+
+
+
+console.log(authStore.auth.currentUser?.photoURL)
 const router = useRouter();
+const isLoading = ref(false);
 const generateNewToken = computed((): boolean => {
   return tokenStore.token.access_token !== '' ? true : false;
 });
@@ -169,8 +188,13 @@ const onDelete = () => {
 };
 
 const handleLogout = async () => {
-  await authStore.logout();
-  router.push('/auth');
+  try {
+    isLoading.value = true;
+    await authStore.logout();
+    router.push('/auth');
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // selection
